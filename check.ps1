@@ -112,7 +112,7 @@ foreach ($version in $lastFewVersions) {
         # TODO: Add msix package to all three architectures.
         $newYamlData = -join($yamlHeader, (ConvertTo-YAML $yamlObject));
         Set-Content -Path $yamlPath -Value $newYamlData;
-        $yamlPath = "manifests/m/Microsoft/PowerShell/$version/Microsoft.PowerShell.locale.en-US.yaml";
+        $yamlPath = "manifests/m/Microsoft/PowerShell/$fourVersion/Microsoft.PowerShell.locale.en-US.yaml";
         $yamlObject = New-Object –TypeName PSObject -Property @{
             PackageIdentifier = "Microsoft.PowerShell";
             PackageVersion = $version;
