@@ -55,7 +55,7 @@ foreach ($version in $lastFewVersions) {
         git checkout -b powershell-$version;
         New-Item "manifests/m/Microsoft/PowerShell/$fourVersion/" -ItemType Directory -ea 0
         $yamlPath = "manifests/m/Microsoft/PowerShell/$fourVersion/PowerShell.installer.yaml";
-        $yamlObject = New-Object –TypeName PSObject -Property @{
+        $yamlObject = [ordered]@{
             PackageIdentifier = "Microsoft.PowerShell";
             Platform = @("Windows.Desktop");
             Scope = "machine";
@@ -101,7 +101,7 @@ foreach ($version in $lastFewVersions) {
             } elseif ($installer.Contains("x64")) {
                 "x64"
             } 
-            $installerEntry = New-Object –TypeName PSObject -Property @{
+            $installerEntry = [ordered]@{
                 Architecture = $arch;
                 InstallerUrl = $installer;
                 InstallerSha256 = $sha256;
@@ -113,7 +113,7 @@ foreach ($version in $lastFewVersions) {
         $newYamlData = -join($yamlHeader, (ConvertTo-YAML $yamlObject));
         Set-Content -Path $yamlPath -Value $newYamlData;
         $yamlPath = "manifests/m/Microsoft/PowerShell/$fourVersion/Microsoft.PowerShell.locale.en-US.yaml";
-        $yamlObject = New-Object –TypeName PSObject -Property @{
+        $yamlObject = [ordered]@{
             PackageIdentifier = "Microsoft.PowerShell";
             PackageVersion = $version;
             PackageLocale = "en-US";
@@ -141,7 +141,7 @@ It includes a command-line shell, an associated scripting language and a framewo
         $newYamlData = -join($yamlHeader, (ConvertTo-YAML $yamlObject));
         Set-Content -Path $yamlPath -Value $newYamlData;
         $yamlPath = "manifests/m/Microsoft/PowerShell/$fourVersion/Microsoft.PowerShell.yaml";
-        $yamlObject = New-Object –TypeName PSObject -Property @{
+        $yamlObject = [ordered]@{
             PackageIdentifier = "Microsoft.PowerShell";
             PackageVersion = $fourVersion;
             DefaultLocale = "en-US";
@@ -164,10 +164,7 @@ It includes a command-line shell, an associated scripting language and a framewo
 $closedPRs = gh pr list --author "PowerShell-Winget-Bot" --repo "microsoft/winget-pkgs" --state=closed --limit 10
   | Foreach-Object {((($_ -split '\t')[2]) -split ':')[1]};
 
-$mergedPRs = gh pr list --author "PowerShell-Winget-Bot" --repo "microsoft/winget-pkgs" --state=merged --limit 10
-  | Foreach-Object {((($_ -split '\t')[2]) -split ':')[1]};
-
-foreach ($pr in ($closedPRs + $mergedPrs)) {
+foreach ($pr in $closedPRs) {
     git push origin -d $pr
 }
 
